@@ -1,11 +1,9 @@
 import fs from "fs-extra";
 import path from "path";
 import md5 from "md5";
-
 import sidebar from "../helpers/sidebar";
 import { randomNumber } from "../helpers/libs";
 import { Image, Comment } from "../models";
-
 export const index = async (req, res) => {
   let viewModel = { image: {}, comments: [] };
   const image = await Image.findOne({
@@ -25,7 +23,6 @@ export const index = async (req, res) => {
     res.redirect("/");
   }
 };
-
 export const create = (req, res) => {
   const saveImage = async () => {
     const imgUrl = randomNumber();
@@ -33,32 +30,22 @@ export const create = (req, res) => {
     if (images.length > 0) {
       saveImage();
     } else {
-      // Image Location
       const imageTempPath = req.file.path;
       const ext = path.extname(req.file.originalname).toLowerCase();
       const targetPath = path.resolve(`./uploads/${imgUrl}${ext}`);
-
-      // Validate Extension
       if (
         ext === ".png" ||
         ext === ".jpg" ||
         ext === ".jpeg" ||
         ext === ".gif"
       ) {
-        // you wil need the public/temp path or this will throw an error
         await fs.rename(imageTempPath, targetPath);
-
-        // create a new image
         const newImg = new Image({
           title: req.body.title,
           filename: imgUrl + ext,
           description: req.body.description,
         });
-
-        // save the image
         const imageSaved = await newImg.save();
-
-        // redirect to the list of images
         res.redirect("/images/" + imageSaved.uniqueId);
       } else {
         await fs.unlink(imageTempPath);
@@ -66,10 +53,8 @@ export const create = (req, res) => {
       }
     }
   };
-
   saveImage();
 };
-
 export const like = async (req, res) => {
   const image = await Image.findOne({
     filename: { $regex: req.params.image_id },
@@ -83,7 +68,6 @@ export const like = async (req, res) => {
     res.status(500).json({ error: "Internal Error" });
   }
 };
-
 export const comment = async (req, res) => {
   const image = await Image.findOne({
     filename: { $regex: req.params.image_id },
@@ -98,7 +82,6 @@ export const comment = async (req, res) => {
     res.redirect("/");
   }
 };
-
 export const remove = async (req, res) => {
   const image = await Image.findOne({
     filename: { $regex: req.params.image_id },

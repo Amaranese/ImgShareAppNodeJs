@@ -1,13 +1,10 @@
 import { Comment, Image } from "../models";
-
 async function imageCounter() {
   return await Image.countDocuments();
 }
-
 async function commentsCounter() {
   return await Comment.countDocuments();
 }
-
 async function imageTotalViewsCounter() {
   const result = await Image.aggregate([
     {
@@ -23,7 +20,6 @@ async function imageTotalViewsCounter() {
   }
   return viewsTotal;
 }
-
 async function likesTotalCounter() {
   const result = await Image.aggregate([
     {
@@ -33,14 +29,12 @@ async function likesTotalCounter() {
       },
     },
   ]);
-
   let likesTotal = 0;
   if (result.length > 0) {
     likesTotal += result[0].likesTotal;
   }
   return likesTotal;
 }
-
 export default async () => {
   const results = await Promise.all([
     imageCounter(),
@@ -48,7 +42,6 @@ export default async () => {
     imageTotalViewsCounter(),
     likesTotalCounter(),
   ]);
-
   return {
     images: results[0],
     comments: results[1],

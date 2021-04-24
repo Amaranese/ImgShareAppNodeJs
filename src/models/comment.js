@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-
 const CommentSchema = new Schema(
   {
     image_id: { type: Schema.Types.ObjectId },
@@ -13,7 +12,6 @@ const CommentSchema = new Schema(
     versionKey: false,
   }
 );
-
 CommentSchema.virtual("image")
   .set(function (image) {
     this._image = image;
@@ -21,5 +19,4 @@ CommentSchema.virtual("image")
   .get(function () {
     return this._image;
   });
-
 export default model("Comment", CommentSchema);
