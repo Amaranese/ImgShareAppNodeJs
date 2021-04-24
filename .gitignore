@@ -1,8 +1,11 @@
 # Node
 node_modules
+
 # uploads folder
 uploads
+
 # environment variables
 .env
+
 ## Dist
 dist
